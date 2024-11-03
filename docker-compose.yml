@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  stable_diffusion:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: stable_diffusion_app
+    volumes:
+      - ./models:/app/models  # Mount local 'models' directory to '/app/models' in the container
+      - ./outputs:/app/outputs  # Mount local 'outputs' directory to '/app/outputs' in the container
+    ports:
+      - "7860:7860"  # Expose port 7860 for web interface
+    environment:
+      - PYTHONUNBUFFERED=1
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
